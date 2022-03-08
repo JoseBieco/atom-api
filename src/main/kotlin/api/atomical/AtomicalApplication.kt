@@ -6,6 +6,9 @@ import org.springframework.boot.runApplication
 @SpringBootApplication
 class AtomicalApplication
 
+/**
+ * Application start point
+ */
 fun main(args: Array<String>) {
 	runApplication<AtomicalApplication>(*args)
 }

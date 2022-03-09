@@ -1,16 +1,11 @@
-package api.atomical.user.dto
+package api.atomical.auth.dto
 
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-class RegisterDto (
-    @NotBlank(message = "Name field cannot be blank")
-    @NotNull(message = "Name field cannot be null.")
-    @Min(value = 2, message = "The name size can't be lower than 2 characters.")
-    var name: String,
-
+class LoginDto (
     @NotBlank(message = "Email field cannot be blank")
     @NotNull(message = "Email field cannot be null.")
     @Min(value = 2, message = "The email size can't be lower than 2 characters.")

@@ -3,7 +3,6 @@ package api.atomical.auth
 import api.atomical.auth.dto.LoginDto
 import api.atomical.auth.dto.RegisterDto
 import api.atomical.user.User
-import api.atomical.user.dto.UserDto
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

@@ -1,15 +1,37 @@
 package api.atomical.user
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("user")
-class UserController {
+@RequestMapping("users")
+class UserController(
+    @Autowired
+    val service: UserService
+) {
     /**
      * Get by Id
-     * Get All
+     * Get All -> Active
      * Update
-     * Delete
+     * Soft Delete
+     * Destroy -> remove user from database
      */
+
+    /**
+     * Get all active users, pageable
+     */
+    @GetMapping
+    fun getAll(
+        @RequestParam(value = "page", defaultValue = "0") page: Int,
+        @RequestParam(value = "linesPerPage", defaultValue = "5") linesPerPage: Int,
+    ): Page<User> {
+        val pageRequest: PageRequest = PageRequest.of(page, linesPerPage)
+        return service.getAll(pageRequest)
+    }
 }

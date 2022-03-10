@@ -3,8 +3,9 @@ package api.atomical.user
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -16,7 +17,7 @@ class UserController(
     val service: UserService
 ) {
     /**
-     * Get by Id
+     * Get by id
      * Get All -> Active
      * Update
      * Soft Delete
@@ -33,5 +34,13 @@ class UserController(
     ): Page<User> {
         val pageRequest: PageRequest = PageRequest.of(page, linesPerPage)
         return service.getAll(pageRequest)
+    }
+
+    /**
+     * Soft delete user
+     */
+    @PatchMapping("/{userId}")
+    fun delete(@PathVariable userId: Long): User {
+        return service.softDelete(userId)
     }
 }

@@ -29,8 +29,7 @@ class AuthController(
      * @param user RegisterDto
      * @return User
      */
-    @PostMapping
-    @RequestMapping("/register")
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     fun register(@Validated @RequestBody user: RegisterDto): User {
         return service.create(user)
@@ -41,8 +40,7 @@ class AuthController(
      * @param user LoginDto
      * @return User
      */
-    @PostMapping
-    @RequestMapping("/login")
+    @PostMapping("/login")
     fun login(@RequestBody user: LoginDto): User {
         return User(id = 1, name = "jose", email = "jo_bieco@hotmail.com", password = "123456789")
     }

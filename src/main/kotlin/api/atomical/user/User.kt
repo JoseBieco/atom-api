@@ -1,6 +1,7 @@
 package api.atomical.user
 
 import api.atomical.auth.dto.RegisterDto
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.time.LocalDateTime
@@ -25,6 +26,7 @@ class User (
     var password: String? = null,
 
     @Column(name = "deleted_at", nullable = true)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     var deleted_at: LocalDateTime? = null
 ){
     constructor(user: RegisterDto): this() {

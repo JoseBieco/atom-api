@@ -17,7 +17,11 @@ class WebSecurityConfig: WebSecurityConfigurerAdapter() {
         return BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.`$2A`)
     }
 
-    override fun configure(http: HttpSecurity?) {
-        http?.authorizeHttpRequests()?.anyRequest()?.permitAll()
+    override fun configure(http: HttpSecurity) {
+        http
+            .csrf().disable()
+            .authorizeHttpRequests()
+            .anyRequest()
+            .permitAll()
     }
 }

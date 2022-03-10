@@ -1,7 +1,8 @@
 package api.atomical.user
 
-import api.atomical.auth.dto.RegisterDto
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -13,4 +14,11 @@ class UserService(
     @Autowired
     val passwordEncoder: PasswordEncoder,
 ) {
+
+    /**
+     * Get all users from database that are active
+     */
+    fun getAll(pageable: PageRequest): Page<User> {
+        return db.find(pageable)
+    }
 }

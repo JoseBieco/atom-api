@@ -19,6 +19,6 @@ class UserService(
      * Get all users from database that are active
      */
     fun getAll(pageable: PageRequest): Page<User> {
-        return db.find(pageable)
+        return db.getAll(pageable)
     }
 }

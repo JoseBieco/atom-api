@@ -2,13 +2,12 @@ package api.atomical.user
 
 import api.atomical.auth.dto.RegisterDto
 import com.fasterxml.jackson.annotation.JsonIgnore
+import org.springframework.security.crypto.password.PasswordEncoder
+import java.time.LocalDateTime
 import javax.persistence.*
 
-/**
- * Just used to represent the entity
- */
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 class User (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,7 +22,10 @@ class User (
 
     @Column(name= "password", nullable = false)
     @JsonIgnore
-    var password: String? = null
+    var password: String? = null,
+
+    @Column(name = "deleted_at", nullable = true)
+    var deleted_at: LocalDateTime? = null
 ){
     constructor(user: RegisterDto): this() {
         this.apply {
@@ -31,5 +33,13 @@ class User (
             email = user.email
             password = user.password
         }
+    }
+
+    /**
+     * Encode user password
+     * @param passwordEncoder PasswordEncoder
+     */
+    fun encodePassword( passwordEncoder: PasswordEncoder) {
+        this.apply { password =  passwordEncoder.encode(password) }
     }
 }

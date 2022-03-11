@@ -6,6 +6,8 @@ import api.atomical.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,6 +24,7 @@ class AuthController(
      * Register
      * Login
      * Logout
+     * Delete
      */
 
     /**
@@ -43,5 +46,13 @@ class AuthController(
     @PostMapping("/login")
     fun login(@RequestBody user: LoginDto): User {
         return User(id = 1, name = "jose", email = "jo_bieco@hotmail.com", password = "123456789")
+    }
+
+    /**
+     * Delete user from database
+     */
+    @DeleteMapping("/{userId}")
+    fun delete(@PathVariable userId: Long) {
+        return service.delete(userId)
     }
 }

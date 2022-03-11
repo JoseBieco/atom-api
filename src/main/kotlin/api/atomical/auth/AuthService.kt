@@ -19,7 +19,7 @@ class AuthService(
 ) {
     /**
      * Create new entity
-     * @param user RegisterDto
+     * @param user RegisterDtogit
      * @return The created User
      * @throws HttpStatus.BAD_REQUEST This email is already registered
      */
@@ -35,5 +35,13 @@ class AuthService(
         val createUser = User(user)
         createUser.encodePassword(passwordEncoder)
         return this.db.save(createUser)
+    }
+
+    /**
+     * Remove user from database
+     * @param userId User unique identifier
+     */
+    fun delete(userId: Long) {
+        return db.deleteById(userId);
     }
 }

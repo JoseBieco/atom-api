@@ -19,7 +19,7 @@ class AuthService(
 ) {
     /**
      * Create new entity
-     * @param user RegisterDtogit
+     * @param user RegisterDto
      * @return The created User
      * @throws HttpStatus.BAD_REQUEST This email is already registered
      */
@@ -28,13 +28,10 @@ class AuthService(
          * Validate email -> must be unique
          * throw error if it's not unique
          */
-        if(db.getByEmail(user.email) !== null) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already registered")
-        }
-
-        val createUser = User(user)
-        createUser.encodePassword(passwordEncoder)
-        return this.db.save(createUser)
+        return db.getByEmail(user.email)
+            .takeIf { it.isEmpty }
+            ?.run { User(user).apply { encodePassword(passwordEncoder) }.run { db.save(this) } }
+            ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already registered")
     }
 
     /**
@@ -42,6 +39,10 @@ class AuthService(
      * @param userId User unique identifier
      */
     fun delete(userId: Long) {
-        return db.deleteById(userId);
+        // Validate if the userId exists in database
+        return db.findById(userId)
+            .orElseThrow{
+                ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
+            }.run { db.delete(this) }
     }
 }

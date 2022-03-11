@@ -41,7 +41,7 @@ class User (
      * Encode user password
      * @param passwordEncoder PasswordEncoder
      */
-    fun encodePassword( passwordEncoder: PasswordEncoder) {
-        this.apply { password =  passwordEncoder.encode(password) }
+    fun encodePassword( passwordEncoder: PasswordEncoder): User {
+        return this.apply { password =  passwordEncoder.encode(password) }
     }
 }

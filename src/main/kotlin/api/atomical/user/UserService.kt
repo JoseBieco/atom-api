@@ -8,6 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.staticProperties
 
 @Service
 class UserService(
@@ -35,5 +37,32 @@ class UserService(
            .orElseThrow {
                ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
            }.apply { deleted_at = LocalDateTime.now() }.run { db.save(this) }
+    }
+
+    /**
+     * Split the request body JSON into "dict" and then update the user data
+     * @param userId User unique identifier
+     * @param requestBody Request body data
+     */
+    fun update(userId: Long, requestBody: String) {
+        val fields = requestBody
+            .replace("{", "")
+            .replace("}", "")
+            .split(",")
+
+        fields.forEach {
+            val updateData = it.split(":")
+            updateField(userId, updateData[0], updateData[1])
+        }
+    }
+
+    /**
+     * Responsible to update the user field on database
+     * @param id Identifier from user
+     * @param field Property from user
+     * @param value New value for the property
+     */
+    fun updateField(id: Long, field: String, value: String) {
+      // return db.updateField(id, field, value)
     }
 }

@@ -1,5 +1,6 @@
 package api.atomical.user
 
+import org.apache.tomcat.util.json.JSONParser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -43,5 +45,15 @@ class UserController(
     @DeleteMapping("/{userId}")
     fun delete(@PathVariable userId: Long): User {
         return service.softDelete(userId)
+    }
+
+    /**
+     * Update user, PATCH
+     */
+    @PatchMapping("/{userId}")
+    fun updateField(@PathVariable userId: Long, @RequestBody body: String) {
+        return service.update(userId, body)
+//       val a = body.replace("{", "").replace("}", "").split(",")
+//        println(a[0].split(":")[1])
     }
 }

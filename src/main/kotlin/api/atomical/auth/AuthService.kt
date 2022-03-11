@@ -31,7 +31,7 @@ class AuthService(
         return db.getByEmail(user.email)
             .takeIf { it.isEmpty }
             ?.run { User(user).apply { encodePassword(passwordEncoder) }.run { db.save(this) } }
-            ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already registered")
+            ?: throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "This email is already registered")
     }
 
     /**

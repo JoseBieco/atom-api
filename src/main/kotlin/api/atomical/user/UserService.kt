@@ -31,13 +31,9 @@ class UserService(
      * @param userId Represents the user unique key
      */
     fun softDelete(userId: Long): User {
-       val user = db.findById(userId)
-           .orElseThrow{
+       return db.findById(userId)
+           .orElseThrow {
                ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
-           }
-
-        user.deleted_at = LocalDateTime.now()
-
-        return db.save(user)
+           }.apply { deleted_at = LocalDateTime.now() }.run { db.save(this) }
     }
 }

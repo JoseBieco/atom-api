@@ -40,6 +40,7 @@ class User (
     /**
      * Encode user password
      * @param passwordEncoder PasswordEncoder
+     * @return User model
      */
     fun encodePassword( passwordEncoder: PasswordEncoder): User {
         return this.apply { password =  passwordEncoder.encode(password) }

@@ -45,4 +45,16 @@ class AuthService(
                 ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
             }.run { db.delete(this) }
     }
+
+    /**
+     * Update user password
+     */
+    fun updatePassword(userId: Long, newPassword: String) {
+        return db.findById(userId).orElseThrow {
+            ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
+        }.apply {
+            password = newPassword
+            encodePassword(passwordEncoder)
+        }.run { db.save(this) }
+    }
 }

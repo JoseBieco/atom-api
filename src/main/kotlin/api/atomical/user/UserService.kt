@@ -1,5 +1,6 @@
 package api.atomical.user
 
+import api.atomical.user.dto.UserDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -40,29 +41,23 @@ class UserService(
     }
 
     /**
-     * Split the request body JSON into "dict" and then update the user data
+     * Update user name or email
      * @param userId User unique identifier
-     * @param requestBody Request body data
+     * @param updatedUser Request body data
      */
-    fun update(userId: Long, requestBody: String) {
-        val fields = requestBody
-            .replace("{", "")
-            .replace("}", "")
-            .split(",")
-
-        fields.forEach {
-            val updateData = it.split(":")
-            updateField(userId, updateData[0], updateData[1])
+    fun update(userId: Long, updatedUser: UserDto): User {
+        val user = db.findById(userId).orElseThrow {
+            ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
         }
-    }
 
-    /**
-     * Responsible to update the user field on database
-     * @param id Identifier from user
-     * @param field Property from user
-     * @param value New value for the property
-     */
-    fun updateField(id: Long, field: String, value: String) {
-      // return db.updateField(id, field, value)
+        user.takeIf { user.email !== updatedUser.email }
+            .run { db.getByEmail(updatedUser.email) }.takeIf { it.isEmpty }?.apply {
+                user.email = updatedUser.email
+                user.name = updatedUser.name
+            }
+            ?: apply { user.name = updatedUser.name }
+                //.run { throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "This email is already registered") }
+
+        return db.save(user)
     }
 }

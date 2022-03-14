@@ -27,7 +27,10 @@ class User (
 
     @Column(name = "deleted_at", nullable = true)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    var deleted_at: LocalDateTime? = null
+    var deleted_at: LocalDateTime? = null,
+
+    @Column(name = "token", nullable = true)
+    var token: String? = null
 ){
     constructor(user: RegisterDto): this() {
         this.apply {

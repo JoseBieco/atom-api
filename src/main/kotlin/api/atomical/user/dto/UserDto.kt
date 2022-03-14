@@ -2,21 +2,17 @@ package api.atomical.user.dto
 
 import api.atomical.auth.dto.LoginDto
 import api.atomical.user.User
+import javax.validation.constraints.Email
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
 
-/**
- * Use to return  user on the response.
- * Remove the password field
- */
 class UserDto (
-    var id: Long? = null,
-    var name: String? = null,
-    var email: String? = null
-){
-    constructor(user: User): this() {
-        this.apply {
-            id = user.id
-            name = user.name
-            email = user.email
-        }
-    }
-}
+    @field:NotBlank(message = "Name field cannot be blank")
+    @field:NotNull(message = "Name field cannot be null.")
+    @field:Size(min = 2, message = "The name size can't be lower than 2 characters.")
+    var name: String,
+
+    @field:Email(message = "The email must be valid.")
+    var email: String,
+){}

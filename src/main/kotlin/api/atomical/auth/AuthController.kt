@@ -46,8 +46,8 @@ class AuthController(
      * @return User
      */
     @PostMapping("/login")
-    fun login(@RequestBody user: LoginDto): User {
-        return User(id = 1, name = "jose", email = "jo_bieco@hotmail.com", password = "123456789")
+    fun login(@RequestBody login: LoginDto): User {
+        return service.login(login)
     }
 
     /**

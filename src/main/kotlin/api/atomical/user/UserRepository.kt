@@ -23,4 +23,12 @@ interface UserRepository: JpaRepository<User, Long> {
      */
     @Query("SELECT u FROM User u WHERE u.deleted_at IS NULL")
     fun getAll(pageRequest: Pageable): Page<User>
+
+    /**
+     * Get user by token
+     * @param token String
+     * @return Optional of user
+     */
+    @Query("SELECT u FROM User u WHERE u.token = :token")
+    fun getByToken(token: String): Optional<User>
 }

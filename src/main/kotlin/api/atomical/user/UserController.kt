@@ -54,4 +54,12 @@ class UserController(
     fun update(@PathVariable userId: Long, @RequestBody body: UserDto): User {
         return service.update(userId, body)
     }
+
+    /**
+     * Get User entity  by id
+     */
+    @GetMapping("/{userId}")
+    fun getById(@PathVariable userId: Long): User {
+        return service.getById(userId)
+    }
 }

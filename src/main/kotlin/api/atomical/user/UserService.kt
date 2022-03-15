@@ -60,4 +60,14 @@ class UserService(
 
         return db.save(user)
     }
+
+    /**
+     * Get user from database by id
+     */
+    fun getById(userId: Long): User {
+        return db.findById(userId)
+            .orElseThrow {
+                ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
+            }
+    }
 }

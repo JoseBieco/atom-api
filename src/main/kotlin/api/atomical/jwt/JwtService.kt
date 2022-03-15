@@ -30,6 +30,7 @@ class JwtService(
 
         return Jwts
             .builder()
+            .setIssuer(user.id.toString())
             .setSubject(user.email)
             .setExpiration(date)
             .signWith(SignatureAlgorithm.HS512, signatureKey)

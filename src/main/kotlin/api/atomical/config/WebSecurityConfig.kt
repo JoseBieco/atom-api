@@ -51,6 +51,7 @@ class WebSecurityConfig: WebSecurityConfigurerAdapter() {
             .csrf().disable()
             .authorizeHttpRequests()
             .antMatchers(HttpMethod.POST, "/auth/**").permitAll()
+            .antMatchers("/auth/logout").authenticated()
             .anyRequest().authenticated()
             .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

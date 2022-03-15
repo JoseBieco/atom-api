@@ -2,21 +2,19 @@ package api.atomical.auth
 
 import api.atomical.auth.dto.LoginDto
 import api.atomical.auth.dto.RegisterDto
+import api.atomical.auth.dto.TokenDto
 import api.atomical.config.UserDetailsServiceImpl
 import api.atomical.jwt.JwtService
-import api.atomical.user.User as UserEntity
+import api.atomical.user.User
 import api.atomical.user.UserRepository
 import io.jsonwebtoken.Jwts
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
-import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
-import java.util.*
 
 @Service
 class AuthService(
@@ -31,6 +29,9 @@ class AuthService(
 
     @Autowired
     val userDetails: UserDetailsServiceImpl,
+
+    @Value("\${security.jwt.signatureKey}")
+    private val signatureKey: String,
 ) {
 
 
@@ -40,14 +41,14 @@ class AuthService(
      * @return The created User
      * @throws HttpStatus.BAD_REQUEST This email is already registered
      */
-    fun create(user: RegisterDto): UserEntity {
+    fun create(user: RegisterDto): User {
         /**
          * Validate email -> must be unique
          * throw error if it's not unique
          */
         return db.getByEmail(user.email)
             .takeIf { it.isEmpty }
-            ?.run { UserEntity(user).apply { encodePassword(passwordEncoder) }.run { db.save(this) } }
+            ?.run { User(user).apply { encodePassword(passwordEncoder) }.run { db.save(this) } }
             ?: throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "This email is already registered")
     }
 
@@ -80,17 +81,14 @@ class AuthService(
      * @throws HttpStatus.UNAUTHORIZED Unauthorized
      * @return User
      */
-    fun getUserFromToken(token: String?): UserEntity {
-        if(token == null) {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized!")
-        }
-        val id = Jwts.parser().setSigningKey("secret").parseClaimsJws(token).body.issuer.toLong()
+    fun getUserFromToken(token: String): User {
+        val id = Jwts.parser().setSigningKey(signatureKey).parseClaimsJws(token).body.issuer.toLong()
         return db.getById(id);
     }
 
     fun authenticate(loginDto: LoginDto): Boolean {
-        val user: UserDetails? = loginDto.email?.let { userDetails.loadUserByUsername(it) }
-        return passwordEncoder.matches(loginDto.password, user?.password)
+        val user: UserDetails = loginDto.email.let { userDetails.loadUserByUsername(it) }
+        return passwordEncoder.matches(loginDto.password, user.password)
     }
 
     /**
@@ -99,10 +97,20 @@ class AuthService(
      * @return Valid User
      * @throws HttpStatus.UNAUTHORIZED Unauthorized
      */
-    fun login(login: LoginDto): UserEntity {
+    fun login(login: LoginDto): User {
         return authenticate(login).takeIf { it }
             .run { db.getByEmail(login.email) }
             .orElseThrow { ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized!") }
             .apply { this.token = jwtService.generateToken(this) }
+            .run { db.save(this) }
+    }
+
+    /**
+     * From token, get the user and set it's token to null
+     * @param token User's token
+     */
+    fun logout(token: TokenDto) {
+        this.getUserFromToken(token.token)
+            .apply { this.token = null }.run { db.save(this)}
     }
 }

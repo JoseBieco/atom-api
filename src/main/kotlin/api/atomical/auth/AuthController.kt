@@ -3,9 +3,12 @@ package api.atomical.auth
 import api.atomical.auth.dto.ChangePasswordDto
 import api.atomical.auth.dto.LoginDto
 import api.atomical.auth.dto.RegisterDto
+import api.atomical.auth.dto.TokenDto
 import api.atomical.user.User
+import com.fasterxml.jackson.core.JsonFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -64,5 +67,11 @@ class AuthController(
     @PatchMapping("/{userId}")
     fun changePassword(@PathVariable userId: Long, @RequestBody body: ChangePasswordDto) {
         return service.updatePassword(userId, body.password)
+    }
+
+    @PostMapping("/logout")
+    fun logout(@RequestBody token: TokenDto): Any {
+        service.logout(token)
+        return ResponseEntity.ok(object { val message: String = "Logged off!" })
     }
 }

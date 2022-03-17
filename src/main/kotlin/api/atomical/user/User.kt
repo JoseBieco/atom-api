@@ -30,7 +30,10 @@ class User (
     var deleted_at: LocalDateTime? = null,
 
     @Column(name = "token", nullable = true)
-    var token: String? = null
+    var token: String? = null,
+
+    @Column(name = "roles", nullable = false)
+    var roles: String? = "USER"
 ){
     constructor(user: RegisterDto): this() {
         this.apply {

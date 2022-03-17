@@ -1,11 +1,11 @@
 package api.atomical.api
 
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
 class ApiController {
-    @RequestMapping("ping")
+    @GetMapping("ping")
     fun ping(): String{
         return "Pong"
     }

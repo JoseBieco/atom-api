@@ -21,7 +21,7 @@ class UserDetailsServiceImpl(
         /**
          * TODO
          */
-        val roles = arrayOf("USER")
+        val roles = arrayOf(user.roles)
 
         return User
             .builder()

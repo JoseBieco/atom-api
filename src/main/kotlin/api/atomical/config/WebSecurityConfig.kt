@@ -1,6 +1,5 @@
 package api.atomical.config
 
-import api.atomical.auth.AuthService
 import api.atomical.jwt.JwtAuthFilter
 import api.atomical.jwt.JwtService
 import org.springframework.beans.factory.annotation.Autowired

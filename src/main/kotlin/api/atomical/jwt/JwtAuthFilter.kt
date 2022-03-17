@@ -1,6 +1,5 @@
 package api.atomical.jwt
 
-import api.atomical.auth.AuthService
 import api.atomical.config.UserDetailsServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken

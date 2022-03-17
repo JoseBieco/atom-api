@@ -5,7 +5,6 @@ import api.atomical.auth.dto.LoginDto
 import api.atomical.auth.dto.RegisterDto
 import api.atomical.auth.dto.TokenDto
 import api.atomical.user.User
-import com.fasterxml.jackson.core.JsonFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -45,7 +44,7 @@ class AuthController(
 
     /**
      * Login route
-     * @param user LoginDto
+     * @param login LoginDto
      * @return User
      */
     @PostMapping("/login")

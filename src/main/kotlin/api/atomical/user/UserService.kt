@@ -9,8 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.staticProperties
 
 @Service
 class UserService(

@@ -62,9 +62,4 @@ class UserController(
     fun getById(@PathVariable userId: Long): User {
         return service.getById(userId)
     }
-
-    @RequestMapping("ping")
-    fun ping(): Any {
-        return object { val message: String = "Pong" }
-    }
 }

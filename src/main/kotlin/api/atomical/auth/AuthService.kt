@@ -43,6 +43,7 @@ class AuthService(
      */
     fun create(user: RegisterDto): User {
         /**
+         * TODO
          * Validate email -> must be unique
          * throw error if it's not unique
          */

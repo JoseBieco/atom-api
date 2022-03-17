@@ -39,6 +39,7 @@ class UserService(
     }
 
     /**
+     * TODO:
      * Update user name or email
      * @param userId User unique identifier
      * @param updatedUser Request body data
@@ -49,11 +50,11 @@ class UserService(
         }
 
         user.takeIf { user.email !== updatedUser.email }
-            .run { db.getByEmail(updatedUser.email) }.takeIf { it.isEmpty }?.apply {
+            .run { db.getByEmail(updatedUser.email) }/*.takeIf { it.isEmpty }?*/.apply {
                 user.email = updatedUser.email
                 user.name = updatedUser.name
             }
-            ?: apply { user.name = updatedUser.name }
+            //?: apply { user.name = updatedUser.name }
                 //.run { throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "This email is already registered") }
 
         return db.save(user)

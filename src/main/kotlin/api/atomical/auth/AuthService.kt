@@ -43,13 +43,14 @@ class AuthService(
      */
     fun create(user: RegisterDto): User {
         /**
+         * TODO
          * Validate email -> must be unique
          * throw error if it's not unique
          */
         return db.getByEmail(user.email)
-            .takeIf { it.isEmpty }
-            ?.run { User(user).apply { encodePassword(passwordEncoder) }.run { db.save(this) } }
-            ?: throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "This email is already registered")
+           /* .takeIf { it.isEmpty }*/
+            .run { User(user).apply { encodePassword(passwordEncoder) }.run { db.save(this) } }
+            // ?: run { throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "This email is already registered") }
     }
 
     /**

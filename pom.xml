@@ -14,7 +14,7 @@
 	<name>atomical</name>
 	<description>Api for Atomical AR app</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>18</java.version>
 		<kotlin.version>1.6.10</kotlin.version>
 	</properties>
 	<dependencies>
@@ -57,6 +57,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>-->
+
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -109,7 +110,7 @@
 					<compilerPlugins>
 						<plugin>spring</plugin>
 					</compilerPlugins>
-					<jvmTarget>17</jvmTarget>
+					<jvmTarget>1.8</jvmTarget>
 				</configuration>
 				<dependencies>
 					<dependency>

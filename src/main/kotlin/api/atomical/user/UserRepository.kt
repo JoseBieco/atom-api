@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import java.util.Optional
 
 interface UserRepository: JpaRepository<User, Long> {
 
@@ -13,7 +12,7 @@ interface UserRepository: JpaRepository<User, Long> {
      * @param email String
      * @return Optional of user
      */
-    fun getByEmail(email: String): Optional<User>
+    fun getByEmail(email: String): User?
 
     /**
      * Get all users pageable
@@ -29,5 +28,5 @@ interface UserRepository: JpaRepository<User, Long> {
      * @return Optional of user
      */
     @Query("SELECT u FROM User u WHERE u.token = :token")
-    fun getByToken(token: String): Optional<User>
+    fun getByToken(token: String): User?
 }

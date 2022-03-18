@@ -12,7 +12,7 @@
 	<artifactId>atomical</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>atomical</name>
-	<description>Api for Atomical AR app</description>
+	<description>Api for Atomical app</description>
 	<properties>
 		<java.version>18</java.version>
 		<kotlin.version>1.6.10</kotlin.version>
@@ -52,16 +52,22 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		<!--<dependency>
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+
+		<!--<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 		</dependency>-->
 
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

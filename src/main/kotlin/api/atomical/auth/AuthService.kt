@@ -48,9 +48,9 @@ class AuthService(
          * throw error if it's not unique
          */
         return db.getByEmail(user.email)
-           /* .takeIf { it.isEmpty }*/
-            .run { User(user).apply { encodePassword(passwordEncoder) }.run { db.save(this) } }
-            // ?: run { throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "This email is already registered") }
+            .takeIf { it !== null }
+            ?.run { throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "This email is already registered") }
+            ?: run { User(user).apply { encodePassword(passwordEncoder) }.run { db.save(this) } }
     }
 
     /**
@@ -100,10 +100,9 @@ class AuthService(
      */
     fun login(login: LoginDto): User {
         return authenticate(login).takeIf { it }
-            .run { db.getByEmail(login.email) }
-            .orElseThrow { ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized!") }
-            .apply { this.token = jwtService.generateToken(this) }
-            .run { db.save(this) }
+            ?.run { db.getByEmail(login.email) }?.apply { this.token = jwtService.generateToken(this) }
+            .run { this?.let { db.save(it)} }
+            ?: run { throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized!")}
     }
 
     /**

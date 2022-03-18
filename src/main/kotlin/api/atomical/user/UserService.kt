@@ -40,7 +40,7 @@ class UserService(
 
     /**
      * TODO:
-     * Update user name or email
+     * Update user's name
      * @param userId User unique identifier
      * @param updatedUser Request body data
      */
@@ -49,13 +49,15 @@ class UserService(
             ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
         }
 
-        user.takeIf { user.email !== updatedUser.email }
-            .run { db.getByEmail(updatedUser.email) }/*.takeIf { it.isEmpty }?*/.apply {
+        // Upddate Email
+       /* user.takeIf { user.email !== updatedUser.email }
+            .run { db.getByEmail(updatedUser.email) }.takeIf { it !== null }
+                ?.run { throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "This email is already registered") }
+            ?: apply {
                 user.email = updatedUser.email
-                user.name = updatedUser.name
-            }
-            //?: apply { user.name = updatedUser.name }
-                //.run { throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "This email is already registered") }
+            }*/
+        // Update Name
+        user.name = updatedUser.name
 
         return db.save(user)
     }

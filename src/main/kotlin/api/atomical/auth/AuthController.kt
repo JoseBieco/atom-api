@@ -1,9 +1,6 @@
 package api.atomical.auth
 
-import api.atomical.auth.dto.ChangePasswordDto
-import api.atomical.auth.dto.LoginDto
-import api.atomical.auth.dto.RegisterDto
-import api.atomical.auth.dto.TokenDto
+import api.atomical.auth.dto.*
 import api.atomical.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -48,7 +45,7 @@ class AuthController(
      * @return User
      */
     @PostMapping("/login")
-    fun login(@RequestBody login: LoginDto): User {
+    fun login(@RequestBody login: LoginDto): LoggedDto {
         return service.login(login)
     }
 

@@ -35,7 +35,7 @@ class UserService(
        return db.findById(userId)
            .orElseThrow {
                ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
-           }.apply { deleted_at = LocalDateTime.now() }.run { db.save(this) }
+           }.apply { deletedAt = LocalDateTime.now() }.run { db.save(this) }
     }
 
     /**
@@ -48,15 +48,6 @@ class UserService(
         val user = db.findById(userId).orElseThrow {
             ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
         }
-
-        // Upddate Email
-       /* user.takeIf { user.email !== updatedUser.email }
-            .run { db.getByEmail(updatedUser.email) }.takeIf { it !== null }
-                ?.run { throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "This email is already registered") }
-            ?: apply {
-                user.email = updatedUser.email
-            }*/
-        // Update Name
         user.name = updatedUser.name
 
         return db.save(user)

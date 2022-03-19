@@ -25,14 +25,16 @@ class User (
     @JsonIgnore
     var password: String? = null,
 
-    @Column(name = "deleted_at", nullable = true)
+    @Column(name = "deletedAt", nullable = true)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    var deleted_at: LocalDateTime? = null,
+    var deletedAt: LocalDateTime? = null,
 
     @Column(name = "token", nullable = true)
+    @JsonIgnore
     var token: String? = null,
 
     @Column(name = "roles", nullable = false)
+    @JsonIgnore
     var roles: String? = "USER"
 ){
     constructor(user: RegisterDto): this() {

@@ -1,5 +1,6 @@
 package api.atomical.auth
 
+import api.atomical.auth.dto.LoggedDto
 import api.atomical.auth.dto.LoginDto
 import api.atomical.auth.dto.RegisterDto
 import api.atomical.auth.dto.TokenDto
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDateTime
 
 @Service
 class AuthService(
@@ -72,8 +74,9 @@ class AuthService(
         return db.findById(userId).orElseThrow {
             ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
         }.apply {
-            password = newPassword
+             password = newPassword
             encodePassword(passwordEncoder)
+            updatedAt = LocalDateTime.now()
         }.run { db.save(this) }
     }
 
@@ -84,7 +87,7 @@ class AuthService(
      */
     fun getUserFromToken(token: String): User {
         val id = Jwts.parser().setSigningKey(signatureKey).parseClaimsJws(token).body.issuer.toLong()
-        return db.getById(id);
+        return db.getById(id)
     }
 
     fun authenticate(loginDto: LoginDto): Boolean {
@@ -98,11 +101,11 @@ class AuthService(
      * @return Valid User
      * @throws HttpStatus.UNAUTHORIZED Unauthorized
      */
-    fun login(login: LoginDto): User {
-        return authenticate(login).takeIf { it }
+    fun login(login: LoginDto): LoggedDto {
+        return LoggedDto(authenticate(login).takeIf { it }
             ?.run { db.getByEmail(login.email) }?.apply { this.token = jwtService.generateToken(this) }
             .run { this?.let { db.save(it)} }
-            ?: run { throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized!")}
+            ?: run { throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized!")})
     }
 
     /**

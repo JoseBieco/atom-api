@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
@@ -14,9 +13,6 @@ import java.time.LocalDateTime
 class UserService(
     @Autowired
     val db: UserRepository,
-
-    @Autowired
-    val passwordEncoder: PasswordEncoder,
 ) {
 
     /**
@@ -35,11 +31,10 @@ class UserService(
        return db.findById(userId)
            .orElseThrow {
                ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
-           }.apply { deleted_at = LocalDateTime.now() }.run { db.save(this) }
+           }.apply { deletedAt = LocalDateTime.now() }.run { db.save(this) }
     }
 
     /**
-     * TODO:
      * Update user's name
      * @param userId User unique identifier
      * @param updatedUser Request body data
@@ -48,16 +43,12 @@ class UserService(
         val user = db.findById(userId).orElseThrow {
             ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
         }
-
-        // Upddate Email
-       /* user.takeIf { user.email !== updatedUser.email }
-            .run { db.getByEmail(updatedUser.email) }.takeIf { it !== null }
-                ?.run { throw ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "This email is already registered") }
-            ?: apply {
-                user.email = updatedUser.email
-            }*/
-        // Update Name
         user.name = updatedUser.name
+
+        user.apply {
+            name = updatedUser.name
+            updatedAt = LocalDateTime.now()
+        }
 
         return db.save(user)
     }

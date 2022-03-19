@@ -19,7 +19,7 @@ interface UserRepository: JpaRepository<User, Long> {
      * @param pageRequest Pageable
      * @return Page of users
      */
-    @Query("SELECT u FROM User u WHERE u.deleted_at IS NULL")
+    @Query("SELECT u FROM User u WHERE u.deletedAt IS NULL")
     fun getAll(pageRequest: Pageable): Page<User>
 
     /**

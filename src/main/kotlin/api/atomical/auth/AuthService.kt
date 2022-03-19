@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDateTime
 
 @Service
 class AuthService(
@@ -75,6 +76,7 @@ class AuthService(
         }.apply {
              password = newPassword
             encodePassword(passwordEncoder)
+            updatedAt = LocalDateTime.now()
         }.run { db.save(this) }
     }
 

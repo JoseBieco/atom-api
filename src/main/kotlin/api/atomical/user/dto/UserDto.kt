@@ -1,8 +1,5 @@
 package api.atomical.user.dto
 
-import api.atomical.auth.dto.LoginDto
-import api.atomical.user.User
-import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size

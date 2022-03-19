@@ -1,5 +1,6 @@
 package api.atomical.family
 
+import api.atomical.atom.Atom
 import api.atomical.baseEntity.BaseEntity
 import api.atomical.family.dto.CreateFamilyDto
 import com.fasterxml.jackson.annotation.JsonFormat
@@ -32,6 +33,8 @@ class Family(
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     var deletedAt: LocalDateTime? = null,
 
+    @OneToMany(mappedBy = "family")
+    var atoms: List<Atom>? = null
 ) {
     constructor(family: CreateFamilyDto): this() {
         this.apply {

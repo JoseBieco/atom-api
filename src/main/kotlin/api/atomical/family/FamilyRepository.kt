@@ -16,9 +16,9 @@ interface FamilyRepository: JpaRepository<Family, Long> {
     fun findByName(name: String): Family?
 
     /**
-     * Get all users pageable
+     * Get all families pageable
      * @param pageRequest Pageable
-     * @return Page of users
+     * @return Page of family
      */
     @Query("SELECT u FROM Family u WHERE u.deletedAt IS NULL")
     fun getAll(pageRequest: Pageable): Page<Family>

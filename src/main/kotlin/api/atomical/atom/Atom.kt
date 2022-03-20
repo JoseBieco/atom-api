@@ -1,18 +1,12 @@
 package api.atomical.atom
 
+import api.atomical.atom.dto.CreateAtomDto
 import api.atomical.family.Family
 import api.atomical.image.Image
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDateTime
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.OneToOne
-import javax.persistence.Table
+import javax.persistence.*
 
 
 @Entity
@@ -23,8 +17,11 @@ class Atom(
     @Column(name = "id", nullable = false)
     var id: Long? = null,
 
+    @Column(name = "name", nullable = true)
+    var name: String? = null,
+
     @ManyToOne
-    @JoinColumn(name = "family_id")
+    @JoinColumn(name = "family_id", nullable = true)
     var family: Family? = null,
 
     @Column(name = "createdAt", nullable = true)
@@ -39,4 +36,11 @@ class Atom(
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     var deletedAt: LocalDateTime? = null,
 ) {
+
+    constructor(atomDto: CreateAtomDto): this() {
+        this.apply {
+            name = atomDto.name
+            createdAt = LocalDateTime.now()
+        }
+    }
 }

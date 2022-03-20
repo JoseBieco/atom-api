@@ -1,13 +1,17 @@
 package api.atomical.atom
 
 import api.atomical.atom.dto.CreateAtomDto
+import api.atomical.atom.dto.UpdateAtomDto
+import api.atomical.atom.dto.UpdateAtomImagesDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -69,5 +73,29 @@ class AtomController(
     @DeleteMapping("/{atomId}/remove")
     fun remove(@PathVariable atomId: Long) {
         return service.remove(atomId)
+    }
+
+    /**
+     * Attach atom to family route
+     */
+    @PatchMapping("/{atomId}/family/{familyId}")
+    fun attachAtomToFamily(@PathVariable atomId: Long, @PathVariable familyId: Long): Atom {
+        return service.attachToFamily(atomId, familyId)
+    }
+
+    /**
+     * Update entire atom route
+     */
+    @PutMapping("/{atomId}")
+    fun update(@PathVariable atomId: Long, @RequestBody updateAtomDto: UpdateAtomDto): Atom {
+        return service.update(atomId, updateAtomDto)
+    }
+
+    /**
+     * Update Image or Atom Image
+     */
+    @PatchMapping("/{atomId}/images")
+    fun patchImages(@PathVariable atomId: Long, @RequestBody updateAtomImagesDto: UpdateAtomImagesDto): Atom {
+        return service.update(atomId, updateAtomImagesDto)
     }
 }

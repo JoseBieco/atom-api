@@ -1,5 +1,6 @@
 package api.atomical.family
 
+import api.atomical.atom.Atom
 import api.atomical.family.dto.CreateFamilyDto
 import api.atomical.family.dto.UpdateFamilyDto
 import api.atomical.family.dto.UpdateFamilyNameDto
@@ -109,5 +110,17 @@ class FamilyService(
      */
     fun save(family: Family): Family {
         return db.save(family)
+    }
+
+    /**
+     * Attach an atom to a family
+     * @param atom Atom to be attached
+     * @param familyId Family unique identifier
+     */
+    fun attachAtom(atom: Atom, familyId: Long): Family {
+        return getById(familyId).apply {
+            atoms?.add(atom)
+            updatedAt = LocalDateTime.now()
+        }.run { db.save(this) }
     }
 }

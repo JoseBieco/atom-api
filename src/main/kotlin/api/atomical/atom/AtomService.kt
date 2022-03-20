@@ -1,6 +1,8 @@
 package api.atomical.atom
 
 import api.atomical.atom.dto.CreateAtomDto
+import api.atomical.atom.dto.UpdateAtomDto
+import api.atomical.atom.dto.UpdateAtomImagesDto
 import api.atomical.family.FamilyService
 import api.atomical.image.ImageService
 import org.springframework.beans.factory.annotation.Autowired
@@ -104,5 +106,52 @@ class AtomService(
         return getById(atomId).run {
             db.delete(this)
         }
+    }
+
+    /**
+     * Attach an atom to a family
+     * @param atomId Atom unique identifier
+     * @param familyId Family unique identifier
+     */
+    fun attachToFamily(atomId: Long, familyId: Long): Atom {
+        val atom = getById(atomId)
+
+        val atomFamily = familyService.attachAtom(atom, familyId)
+
+        return atom.apply {
+            family = atomFamily
+            updatedAt = LocalDateTime.now()
+        }.run { db.save(atom) }
+    }
+
+    /**
+     * Update the entire atom
+     */
+    fun update(atomId: Long, updateAtomDto: UpdateAtomDto): Atom {
+        return getById(atomId).apply {
+            name = updateAtomDto.name
+            number = updateAtomDto.number
+            weigh = updateAtomDto.weigh
+            atomImage = updateAtomDto.atomImage?.run { imageService.findById(this) } ?: this.atomImage
+            image = updateAtomDto.image?.run { imageService.findById(this) } ?: this.image
+            symbol = updateAtomDto.symbol
+            description = (updateAtomDto.description?.run { updateAtomDto.description.toString().isEmpty() } ?: this.description).toString()
+            curiosity = (updateAtomDto.curiosity?.run { updateAtomDto.curiosity.toString().isEmpty() } ?: this.curiosity).toString()
+            column = updateAtomDto.column
+            period = updateAtomDto.period
+            updatedAt = LocalDateTime.now()
+        }.run { db.save(this) }
+    }
+
+    /**
+     * Update atomImage and image
+     * If some of those are not send in the request, the value will be replaced with null
+     */
+    fun update(atomId: Long, updateAtomImagesDto: UpdateAtomImagesDto): Atom {
+        return getById(atomId).apply {
+            atomImage = updateAtomImagesDto.atomImage?.run { imageService.findById(this) }
+            image = updateAtomImagesDto.image?.run { imageService.findById(this) }
+            updatedAt = LocalDateTime.now()
+        }.run { db.save(this) }
     }
 }

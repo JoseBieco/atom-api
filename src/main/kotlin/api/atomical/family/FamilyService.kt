@@ -101,4 +101,13 @@ class FamilyService(
             updatedAt = LocalDateTime.now()
         }.run { db.save(this) }
     }
+
+    /**
+     * Use to save a family entity in others services
+     * @param family Updated family
+     * @return Updated family
+     */
+    fun save(family: Family): Family {
+        return db.save(family)
+    }
 }

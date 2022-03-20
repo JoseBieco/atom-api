@@ -4,6 +4,7 @@ import api.atomical.atom.dto.CreateAtomDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -20,11 +21,24 @@ class AtomController(
 ) {
 
     /**
+     * TODO
+     * Refactor create route to permit send family as null and create an "attach" route
+     */
+
+    /**
      * Create atom and relate it to family route
      */
     @PostMapping("/family/{familyId}")
-    fun create(@PathVariable familyId: Long, @RequestBody atomDto: CreateAtomDto): Atom {
+    fun createFromFamily(@PathVariable familyId: Long, @RequestBody atomDto: CreateAtomDto): Atom {
         return service.create(familyId, atomDto)
+    }
+
+    /**
+     * Create atom route
+     */
+    @PostMapping
+    fun simpleCreate(@RequestBody atomDto: CreateAtomDto): Atom {
+        return service.create(atomDto)
     }
 
     @GetMapping
@@ -39,5 +53,21 @@ class AtomController(
     @GetMapping("/{atomId}")
     fun getById(@PathVariable atomId: Long): Atom {
         return service.getById(atomId)
+    }
+
+    /**
+     * Soft delete atom entity route
+     */
+    @DeleteMapping("/{atomId}")
+    fun softDelete(@PathVariable atomId: Long): Atom {
+        return service.softDelete(atomId)
+    }
+
+    /**
+     * Remove atom from database route
+     */
+    @DeleteMapping("/{atomId}/remove")
+    fun remove(@PathVariable atomId: Long) {
+        return service.remove(atomId)
     }
 }

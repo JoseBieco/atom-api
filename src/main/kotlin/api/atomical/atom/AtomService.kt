@@ -1,7 +1,8 @@
 package api.atomical.atom
 
 import api.atomical.atom.dto.CreateAtomDto
-import api.atomical.family.FamilyRepository
+import api.atomical.family.FamilyService
+import api.atomical.image.ImageService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -16,7 +17,10 @@ class AtomService(
     val db: AtomRepository,
 
     @Autowired
-    val familyDb: FamilyRepository
+    val familyService: FamilyService,
+
+    @Autowired
+    val imageService: ImageService
 ) {
 
     /**
@@ -26,13 +30,38 @@ class AtomService(
      * @return Created Atom
      */
     fun create(familyId: Long, atomDto: CreateAtomDto): Atom {
-        val atomFamily = familyDb.getById(familyId)
-        val atom = Atom(atomDto).apply {family = atomFamily }.run { db.save(this) }
+        val atomFamily = familyService.getById(familyId)
+        val atom = Atom(atomDto).apply {
+            family = atomFamily
+            atomImage = atomDto.atomImage?.run { imageService.findById(this) }
+            image = atomDto.image?.run { imageService.findById(this) }
+        }.run { db.save(this) }
 
         atomFamily.apply {
             updatedAt = LocalDateTime.now()
             atoms?.add(atom)
-        }
+        }.run { familyService.save(this) }
+
+        return atom
+    }
+
+    /**
+     * Check if the family is passed, if true, get the family and "create" the relation, else, just create the atom
+     * @param atomDto Data to create the atom
+     * @return Created Atom
+     */
+    fun create(atomDto: CreateAtomDto): Atom {
+        val atomFamily = atomDto.run { this.familyId?.let { familyService.getById(it) } }
+        val atom = Atom(atomDto).apply {
+            family = atomFamily
+            atomImage = atomDto.atomImage?.run { imageService.findById(this) }
+            image = atomDto.image?.run { imageService.findById(this) }
+        }.run { db.save(this) }
+
+        atomFamily?.apply {
+            updatedAt = LocalDateTime.now()
+            atoms?.add(atom)
+        }.run { this?.let { familyService.save(it) } }
 
         return atom
     }
@@ -52,6 +81,28 @@ class AtomService(
     fun getById(atomId: Long): Atom {
         return db.findById(atomId).orElseThrow {
             ResponseStatusException(HttpStatus.NOT_FOUND, "Family not found.")
+        }
+    }
+
+    /**
+     * Alter atom deletedAt attribute
+     * Checks if the atomId param exists, if not, throws bad request
+     * @param atomId Represents the atom unique key
+     */
+    fun softDelete(atomId: Long): Atom {
+        return getById(atomId).apply {
+            deletedAt = LocalDateTime.now()
+            updatedAt = LocalDateTime.now()
+        }.run { db.save(this) }
+    }
+
+    /**
+     * Remove atom from database
+     * @param atomId Atom unique identifier
+     */
+    fun remove(atomId: Long) {
+        return getById(atomId).run {
+            db.delete(this)
         }
     }
 }

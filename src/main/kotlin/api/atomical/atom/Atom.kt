@@ -4,7 +4,6 @@ import api.atomical.atom.dto.CreateAtomDto
 import api.atomical.family.Family
 import api.atomical.image.Image
 import com.fasterxml.jackson.annotation.JsonFormat
-import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -21,8 +20,16 @@ class Atom(
     var name: String? = null,
 
     @ManyToOne
-    @JoinColumn(name = "family_id", nullable = true)
+    @JoinColumn(name = "familyId", nullable = true)
     var family: Family? = null,
+
+    @OneToOne
+    @JoinColumn(name = "imageId", nullable = true)
+    var image: Image? = null,
+
+    @OneToOne
+    @JoinColumn(name = "atomImageId", nullable = true)
+    var atomImage: Image? = null,
 
     @Column(name = "createdAt", nullable = true)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

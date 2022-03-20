@@ -19,6 +19,27 @@ class Atom(
     @Column(name = "name", nullable = true)
     var name: String? = null,
 
+    @Column(name = "number", nullable = false)
+    var number: Int? = null,
+
+    @Column(name = "weigh", nullable = false)
+    var weigh: Float? = null,
+
+    @Column(name = "symbol", nullable = false)
+    var symbol: String? = null,
+
+    @Column(name = "description", nullable = true)
+    var description: String? = null,
+
+    @Column(name = "curiosity", nullable = true)
+    var curiosity: String? = null,
+
+    @Column(name = "`column`", nullable = false)
+    var column: Int? = null,
+
+    @Column(name = "period", nullable = false)
+    var period: Int? = null,
+
     @ManyToOne
     @JoinColumn(name = "familyId", nullable = true)
     var family: Family? = null,
@@ -47,6 +68,13 @@ class Atom(
     constructor(atomDto: CreateAtomDto): this() {
         this.apply {
             name = atomDto.name
+            number = atomDto.number
+            weigh = atomDto.weigh
+            symbol = atomDto.symbol
+            description = atomDto.description
+            curiosity = atomDto.curiosity
+            column = atomDto.column
+            period = atomDto.period
             createdAt = LocalDateTime.now()
         }
     }

@@ -1,4 +1,6 @@
 package api.atomical.atom.dto
 
-class UpdateAtomImagesDtop {
-}
+class UpdateAtomImagesDto(
+    var atomImage: Long?,
+    var image: Long?,
+)

@@ -1,8 +1,9 @@
 package api.atomical.family
 
-import api.atomical.baseEntity.BaseEntity
+import api.atomical.atom.Atom
 import api.atomical.family.dto.CreateFamilyDto
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -32,6 +33,9 @@ class Family(
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     var deletedAt: LocalDateTime? = null,
 
+    @OneToMany(mappedBy = "family")
+    @JsonIgnore
+    var atoms: MutableList<Atom>? = null
 ) {
     constructor(family: CreateFamilyDto): this() {
         this.apply {

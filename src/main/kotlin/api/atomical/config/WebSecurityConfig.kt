@@ -52,7 +52,7 @@ class WebSecurityConfig: WebSecurityConfigurerAdapter() {
             .antMatchers(HttpMethod.POST, "/auth/**").permitAll()
             .antMatchers("/auth/logout").authenticated()
             .antMatchers("/ping").permitAll()
-            .anyRequest().authenticated()
+            .anyRequest().permitAll()
             .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
